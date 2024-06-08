@@ -46,6 +46,5 @@ public class AuthenticationPadraoService implements AuthenticationService {
         return LoginResponseDTO.builder()
                 .token(token)
                 .build();
-
     }
 }

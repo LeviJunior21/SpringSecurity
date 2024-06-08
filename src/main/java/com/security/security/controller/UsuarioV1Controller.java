@@ -5,6 +5,7 @@ import com.security.security.dto.usuario.UsuarioPostRequestDTO;
 import com.security.security.service.autenticacao.AuthenticationService;
 import com.security.security.service.usuario.UsuarioCreateService;
 import com.security.security.service.usuario.UsuarioGetService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,14 +26,14 @@ public class UsuarioV1Controller {
     AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> autenticar(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) {
+    public ResponseEntity<?> autenticar(@RequestBody @Valid AuthenticationRequestDTO authenticationRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(authenticationService.autenticar(authenticationRequestDTO));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> criar(@RequestBody UsuarioPostRequestDTO usuarioPostRequestDTO) {
+    public ResponseEntity<?> criar(@RequestBody @Valid UsuarioPostRequestDTO usuarioPostRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioCreateService.criar(usuarioPostRequestDTO));
