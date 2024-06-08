@@ -30,7 +30,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.recoverToken(request);
-
         if (token != null) {
             String nome = this.jwtService.validarToken(token);
             Usuario usuario = usuarioRepository.buscarPorNome(nome).orElseThrow(UsuarioNaoExisteException::new);
@@ -49,6 +48,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private String recoverToken(HttpServletRequest httpServletRequest) {
         var authHeader = httpServletRequest.getHeader("Authorization");
         if(authHeader == null) return null;
-        return authHeader.replace("Bearer ", "").substring(7);
+        return authHeader.replace("Bearer ", "");
     }
 }

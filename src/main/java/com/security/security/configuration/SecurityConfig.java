@@ -36,9 +36,6 @@ public class SecurityConfig {
     @Value("${jwt.private.key}")
     private RSAPrivateKey priv;
 
-    @Autowired
-    SecurityFilter securityFilter;
-
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -51,13 +48,12 @@ public class SecurityConfig {
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/disciplinas").hasRole("USER")
                         .requestMatchers(request -> "/error".equals(request.getServletPath())).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(config -> config.jwt(Customizer.withDefaults()))
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
@@ -75,12 +71,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    SecurityFilter securityFilter() {
+        return new SecurityFilter();
     }
 }

@@ -1,31 +1,48 @@
 package com.security.security.service.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.security.security.model.UsuarioAuthenticated;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.*;
+import java.time.Instant;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    String secretKey = "chave-secreta";
+    String issuer = "usuarios-auth";
+    @Autowired
+    JwtEncoder jwtEncoder;
+    @Autowired
+    JwtDecoder jwtDecoder;
 
     public String gerarToken(UsuarioAuthenticated usuarioAuthenticated) {
-        return JWT.create()
-                .withIssuer("usuarios-auth")
-                .withSubject(usuarioAuthenticated.getUsername())
-                .withClaim("id", usuarioAuthenticated.getId())
-                .withExpiresAt(LocalDateTime.now()
-                        .plusMinutes(30)
-                        .toInstant(ZoneOffset.of("-03:00"))
-                ).sign(Algorithm.HMAC256(secretKey));
+        Instant now = Instant.now();
+        long exp = 3600L;
+        Consumer<Map<String, Object>> claimsConsumer = (claims) -> {
+            claims.put("authorities", usuarioAuthenticated.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        };
+
+        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                .issuer(issuer)
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(exp))
+                .subject(usuarioAuthenticated.getNome())
+                .claims(claimsConsumer)
+                .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
     }
 
     public String validarToken(String token) {
-        return JWT.require(Algorithm.HMAC256(secretKey))
-                .withIssuer("usuarios-auth")
-                .build().verify(token).getSubject();
+        var validToken = token.replace("Bearer ", "");
+        Jwt jwt = jwtDecoder.decode(validToken);
+        return jwt.getSubject();
     }
 }
