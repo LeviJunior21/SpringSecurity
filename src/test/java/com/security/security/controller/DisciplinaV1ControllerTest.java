@@ -42,7 +42,7 @@ public class DisciplinaV1ControllerTest {
     String URI_DISCIPLINAS = "/v1/disciplinas";
     String authorizationHeader;
     AuthenticationRequestDTO authenticationRequestDTO;
-    UsuarioAuthenticated usuarioAuthenticated;
+    Usuario usuarioAuthenticated;
     Usuario usuario;
 
     @BeforeEach
@@ -59,7 +59,7 @@ public class DisciplinaV1ControllerTest {
                 .senha("123456")
                 .build();
 
-        usuarioAuthenticated = new UsuarioAuthenticated();
+        usuarioAuthenticated = new Usuario();
         authorizationHeader = "Bearer " + getToken(authenticationRequestDTO);
     }
 
@@ -73,7 +73,7 @@ public class DisciplinaV1ControllerTest {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        UsuarioAuthenticated usuarioAuthenticated = new UsuarioAuthenticated();
+        Usuario usuarioAuthenticated = new Usuario();
         usuarioAuthenticated.setNome(userDetails.getUsername());
         usuarioAuthenticated.setSenha(userDetails.getPassword());
 

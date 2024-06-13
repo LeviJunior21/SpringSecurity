@@ -37,6 +37,10 @@ public class Usuario implements UserDetails {
     @Builder.Default
     Boolean habilitado = true;
 
+    @JsonProperty("online")
+    @Builder.Default
+    Boolean online = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role));

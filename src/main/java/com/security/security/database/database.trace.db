@@ -5736,3 +5736,9 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: /home/marcos_and
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 164 more
+2024-06-13 12:47:31.846603-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "delete [*]* from usuarios"; expected "identifier"; SQL statement:
+delete * from usuarios [42001-224]
+2024-06-13 12:47:38.789254-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ROM" not found; SQL statement:
+delete rom usuarios [42102-224]
