@@ -4,6 +4,7 @@ import com.security.security.dto.login.AuthenticationRequestDTO;
 import com.security.security.dto.usuario.UsuarioPostRequestDTO;
 import com.security.security.service.autenticacao.AuthenticationService;
 import com.security.security.service.usuario.UsuarioCreateService;
+import com.security.security.service.usuario.UsuarioDeleteService;
 import com.security.security.service.usuario.UsuarioGetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class UsuarioV1Controller {
     UsuarioGetService usuarioGetService;
     @Autowired
     AuthenticationService authenticationService;
+    @Autowired
+    UsuarioDeleteService usuarioDeleteService;
 
     @PostMapping("/login")
     public ResponseEntity<?> autenticar(@RequestBody @Valid AuthenticationRequestDTO authenticationRequestDTO) {
@@ -44,5 +47,21 @@ public class UsuarioV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioGetService.get(null));
+    }
+
+    @DeleteMapping("/deletar")
+    public ResponseEntity<?> delete(@RequestParam Long id) {
+        usuarioDeleteService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body("Usuario deletado com sucesso");
+    }
+
+    @DeleteMapping("/deletarAll")
+    public ResponseEntity<?> deleteAll() {
+        usuarioDeleteService.delete(null);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body("Usuarios deletados com sucesso");
     }
 }

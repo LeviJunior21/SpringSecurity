@@ -1,6 +1,6 @@
 package com.security.security.service.jwt;
 
-import com.security.security.model.UsuarioAuthenticated;
+import com.security.security.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -21,7 +21,7 @@ public class JwtService {
     @Autowired
     JwtDecoder jwtDecoder;
 
-    public String gerarToken(UsuarioAuthenticated usuarioAuthenticated) {
+    public String gerarToken(Usuario usuarioAuthenticated) {
         Instant now = Instant.now();
         long exp = 3600L;
         Consumer<Map<String, Object>> claimsConsumer = (claims) -> {

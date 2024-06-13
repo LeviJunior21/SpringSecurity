@@ -2,9 +2,7 @@ package com.security.security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.security.dto.login.AuthenticationRequestDTO;
-import com.security.security.exception.CustomErrorType;
 import com.security.security.model.Usuario;
-import com.security.security.model.UsuarioAuthenticated;
 import com.security.security.repositories.UsuarioRepository;
 import com.security.security.service.jwt.JwtService;
 import org.junit.jupiter.api.*;

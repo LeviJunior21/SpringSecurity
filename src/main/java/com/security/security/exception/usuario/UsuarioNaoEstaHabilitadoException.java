@@ -6,4 +6,8 @@ public class UsuarioNaoEstaHabilitadoException extends AppSecurityException {
     public UsuarioNaoEstaHabilitadoException() {
         super("O usuário está desabilitado");
     }
+
+    public UsuarioNaoEstaHabilitadoException(String mensagem) {
+        super(mensagem);
+    }
 }

@@ -19,4 +19,8 @@ public class UsuarioPostRequestDTO {
     @JsonProperty("senha")
     @NotBlank(message = "Senha invalida")
     String senha;
+
+    @JsonProperty("role")
+    @NotBlank(message = "Tipo de usuario invalido")
+    String role;
 }

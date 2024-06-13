@@ -5,9 +5,9 @@ import com.security.security.dto.login.LoginResponseDTO;
 import com.security.security.exception.usuario.UsuarioNaoExisteException;
 import com.security.security.exception.usuario.UsuarioSenhaInvalidaException;
 import com.security.security.model.Usuario;
-import com.security.security.model.UsuarioAuthenticated;
 import com.security.security.repositories.UsuarioRepository;
 import com.security.security.service.jwt.JwtService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +26,8 @@ public class AuthenticationPadraoService implements AuthenticationService {
     AuthenticationManager authenticationManager;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ModelMapper modelMapper;
 
     public LoginResponseDTO autenticar(AuthenticationRequestDTO authenticationRequestDTO) {
         Usuario usuarioResponse = usuarioRepository.buscarPorNome(authenticationRequestDTO.getNome()).orElseThrow(UsuarioNaoExisteException::new);
@@ -37,7 +39,8 @@ public class AuthenticationPadraoService implements AuthenticationService {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        UsuarioAuthenticated usuarioAuthenticated = new UsuarioAuthenticated();
+        Usuario usuarioAuthenticated = modelMapper.map(usuarioResponse, Usuario.class);
+
         usuarioAuthenticated.setNome(userDetails.getUsername());
         usuarioAuthenticated.setSenha(userDetails.getPassword());
 
