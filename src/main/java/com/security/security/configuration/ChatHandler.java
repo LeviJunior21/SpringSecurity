@@ -24,10 +24,10 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         LOGGER.info("Conectado ao servidor");
-        sessions.add(session);
 
         Long idUsuario = getUserIdFromSession(session);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+        sessions.add(session);
         usuario.setOnline(true);
         usuarioRepository.save(usuario);
     }
@@ -35,10 +35,10 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         LOGGER.info("Desconectado do servidor");
-        sessions.remove(session);
 
         Long idUsuario = getUserIdFromSession(session);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+        sessions.remove(session);
         usuario.setOnline(false);
         usuarioRepository.save(usuario);
     }
@@ -53,7 +53,7 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     private Long getUserIdFromSession(WebSocketSession session) {
-        Long idUsuario = 1L;
+        Long idUsuario = usuarioRepository.findAll().stream().findFirst().get().getId();
         return idUsuario;
     }
 }
