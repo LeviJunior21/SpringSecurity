@@ -24,37 +24,36 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         LOGGER.info("Conectado ao servidor");
+        sessions.add(session);
 
         Long idUsuario = getUserIdFromSession(session);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
         usuario.setOnline(true);
         usuarioRepository.save(usuario);
-
-        sessions.add(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         LOGGER.info("Desconectado do servidor");
+        sessions.remove(session);
 
         Long idUsuario = getUserIdFromSession(session);
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
         usuario.setOnline(false);
         usuarioRepository.save(usuario);
-
-        sessions.remove(session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        LOGGER.info("Mensagem enviada ao servidor");
+        String newMessage = message.getPayload();
+        LOGGER.info("Mensagem enviada ao servidor: " + newMessage);
         for (WebSocketSession webSocketSession : sessions) {
             webSocketSession.sendMessage(message);
         }
     }
 
     private Long getUserIdFromSession(WebSocketSession session) {
-        Long idUsuario = 3652L;
+        Long idUsuario = 1L;
         return idUsuario;
     }
 }

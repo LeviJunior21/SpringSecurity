@@ -47,9 +47,10 @@ public class DisciplinaV1ControllerTest {
 
     @BeforeEach
     void setup() {
-        usuario= Usuario.builder()
+        usuario = Usuario.builder()
                 .nome("Levi")
                 .senha("123456")
+                .role("ROLE_ADMIN")
                 .build();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuario = usuarioRepository.save(usuario);
@@ -59,7 +60,11 @@ public class DisciplinaV1ControllerTest {
                 .senha("123456")
                 .build();
 
-        usuarioAuthenticated = new Usuario();
+        usuarioAuthenticated = Usuario.builder()
+                .nome(usuario.getNome())
+                .senha("123456")
+                .role(usuario.getRole())
+                .build();
         authorizationHeader = "Bearer " + getToken(authenticationRequestDTO);
     }
 
@@ -76,6 +81,7 @@ public class DisciplinaV1ControllerTest {
         Usuario usuarioAuthenticated = new Usuario();
         usuarioAuthenticated.setNome(userDetails.getUsername());
         usuarioAuthenticated.setSenha(userDetails.getPassword());
+        usuarioAuthenticated.setRole("ROLE_ADMIN");
 
         String token = jwtService.gerarToken(usuarioAuthenticated);
         return token;
