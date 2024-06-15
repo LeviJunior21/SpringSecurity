@@ -21,7 +21,8 @@ public class ChatV1Controller {
         LOGGER.info("Mensagem recebida no controller: " + chatPostPutRequestDTO.getMensagem());
         simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getReceptor()), "/private", chatPostPutRequestDTO);
         simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getRemetente()), "/private", chatPostPutRequestDTO);
-
         return chatPostPutRequestDTO;
     }
+
+
 }
