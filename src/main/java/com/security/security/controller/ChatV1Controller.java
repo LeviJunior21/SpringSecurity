@@ -1,6 +1,5 @@
 package com.security.security.controller;
 
-import com.security.security.configuration.ChatHandler;
 import com.security.security.dto.chat.ChatPostRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

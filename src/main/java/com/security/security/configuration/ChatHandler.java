@@ -47,8 +47,11 @@ public class ChatHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String newMessage = message.getPayload();
         LOGGER.info("Mensagem enviada ao servidor: " + newMessage);
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(message);
+
+        synchronized (sessions) {
+            for (WebSocketSession webSocketSession : sessions) {
+                webSocketSession.sendMessage(message);
+            }
         }
     }
 
