@@ -8,7 +8,6 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.swing.event.ListDataEvent;
 import java.util.List;
 
 @Configuration
