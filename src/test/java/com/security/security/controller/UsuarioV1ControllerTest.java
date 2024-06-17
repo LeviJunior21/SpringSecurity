@@ -160,5 +160,15 @@ public class UsuarioV1ControllerTest {
             assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
             assertEquals("Senha invalida", customErrorType.getErrors().get(0));
         }
+
+        @Test
+        @DisplayName("Quando deletamos todos os usuários sem token")
+        void quandoDeletarTodosOsUsuariosSemToken() throws Exception {
+            String response = driver.perform(post(URI_USUARIO + "/v1/usuarios/deleteAll")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andReturn().getResponse().getContentAsString();
+        }
     }
 }
