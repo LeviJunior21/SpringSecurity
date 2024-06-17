@@ -40,3 +40,28 @@ export const criarUsuario = async(data: CriarUsuarioInterface): Promise<boolean>
 
     return result;
 }
+
+export interface Usuario {
+    id: number,
+    nome: string
+}
+export const getID = async(): Promise<number> => {
+    let result: Usuario[] = await getAllUsers();
+
+    if (result.length > 0) {
+        const randomIndex = Math.floor(Math.random() * result.length);
+        return result[randomIndex].id;
+    } else {
+        return 0;
+    }
+}
+
+export const getAllUsers = async(): Promise<Usuario[]> => {
+    let result: Usuario[] = [];
+    const response = await axios.get("http://localhost:8080/v1/usuarios");
+    if (response.status == 200) {
+        result = response.data;
+    }
+
+    return result;
+}
