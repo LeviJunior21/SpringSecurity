@@ -1,8 +1,11 @@
 package com.security.security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.security.security.dto.disciplina.DisciplinaDTO;
 import com.security.security.dto.login.AuthenticationRequestDTO;
+import com.security.security.model.Disciplina;
 import com.security.security.model.Usuario;
+import com.security.security.repositories.DisciplinaRepository;
 import com.security.security.repositories.UsuarioRepository;
 import com.security.security.service.jwt.JwtService;
 import org.junit.jupiter.api.*;
@@ -17,15 +20,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Casos de teste do controlador de disciplinas.")
-public class DisciplinaV1ControllerTest {
+public class DisciplinaDTOV1ControllerTest {
     @Autowired
     MockMvc driver;
     @Autowired
@@ -38,12 +44,16 @@ public class DisciplinaV1ControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    DisciplinaRepository disciplinaRepository;
 
     String URI_DISCIPLINAS = "/v1/disciplinas";
     String authorizationHeader;
     AuthenticationRequestDTO authenticationRequestDTO;
     Usuario usuarioAuthenticated;
     Usuario usuario;
+    Disciplina disciplina;
+    DisciplinaDTO disciplinaDTO;
 
     @BeforeEach
     void setup() {
@@ -66,11 +76,22 @@ public class DisciplinaV1ControllerTest {
                 .role(usuario.getRole())
                 .build();
         authorizationHeader = "Bearer " + getToken(authenticationRequestDTO);
+
+        disciplina = Disciplina.builder()
+                .nome("Teoria da Computação")
+                .build();
+
+        disciplina = disciplinaRepository.save(disciplina);
+
+        disciplinaDTO = DisciplinaDTO.builder()
+                .nome("Teoria da Computação")
+                .build();
     }
 
     @AfterEach
     void tearDown() {
         usuarioRepository.deleteAll();
+        disciplinaRepository.deleteAll();
     }
 
     private String getToken(AuthenticationRequestDTO authenticationRequestDTO) {
@@ -92,13 +113,33 @@ public class DisciplinaV1ControllerTest {
     class CasosDeTestesQuePassam {
 
         @Test
+        @DisplayName("Quando criamos uma disciplina com token valido")
+        void quandoCriamosUmaDisciplinaComTokenValido () throws Exception {
+            // Arrange
+            // Nenhuma necessidade alem do setUp
+
+            // Act
+            String response = driver.perform(post(URI_DISCIPLINAS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(disciplinaDTO))
+                            .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andReturn().getResponse().getContentAsString();
+
+            DisciplinaDTO disciplinaDTOResponse = objectMapper.readValue(response, DisciplinaDTO.class);
+            assertEquals(disciplinaDTO.getNome(), disciplinaDTOResponse.getNome());
+        }
+
+        @Test
         @DisplayName("Quando buscamos pelas disciplinas com token valido.")
         void quandoBuscamosPelasDisciplinasComTokenValido() throws Exception {
             // Arrange
             // Nenhuma necessidade além do setUp
 
             // Act
-            String response = driver.perform(get(URI_DISCIPLINAS)
+            String response = driver.perform(get(URI_DISCIPLINAS + "?page=0&size=10")
                             .contentType(MediaType.APPLICATION_JSON)
                             .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                     )
@@ -107,8 +148,7 @@ public class DisciplinaV1ControllerTest {
                     .andReturn().getResponse().getContentAsString();
 
             // Assert
-            String resp = response;
-            assertEquals("Voce esta autorizado a ver todas as disciplinas", resp);
+            assertTrue(response.contains("Teoria da Computação"));
         }
     }
 }
