@@ -3,7 +3,10 @@ package com.security.security.controller;
 import com.security.security.dto.disciplina.DisciplinaDTO;
 import com.security.security.service.disciplina.DisciplinaCriarService;
 import com.security.security.service.disciplina.DisciplinaListarService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,12 @@ public class DisciplinaController {
     @Autowired
     DisciplinaListarService disciplinaListarService;
 
+    @Operation(description = "Cria uma disciplina (precisa de autorização com Token e papel de ADMIN).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna a disciplina criada"),
+            @ApiResponse(responseCode = "400", description = "A disciplina já existe."),
+            @ApiResponse(responseCode = "401", description = "O usuário não está autorizado.")
+    })
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody DisciplinaDTO disciplinaDTO) {
         return ResponseEntity
@@ -31,6 +40,11 @@ public class DisciplinaController {
                 .body(disciplinaCriarService.criar(disciplinaDTO));
     }
 
+    @Operation(description = "Retorna uma páginação de disciplinas criadas (precisa de autorização com Token).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna todas as disciplinas criadas."),
+            @ApiResponse(responseCode = "401", description = "Usuário não está autorizado.")
+    })
     @GetMapping
     public ResponseEntity<?> getAll(
             @RequestHeader(HttpHeaders.AUTHORIZATION) @Parameter(hidden = true) String token,

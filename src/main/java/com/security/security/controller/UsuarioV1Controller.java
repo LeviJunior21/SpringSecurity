@@ -52,7 +52,7 @@ public class UsuarioV1Controller {
                 .body(usuarioCreateService.criar(usuarioPostRequestDTO));
     }
 
-    @Operation(description = "Busca por todos os usuários criados (não necessita de autorização do token)")
+    @Operation(description = "Busca por todos os usuários criados (não necessita de autorização com token)")
     @ApiResponse(description = "Retorna uma lista de usuários")
     @GetMapping
     public ResponseEntity<?> getAll() {
@@ -61,10 +61,11 @@ public class UsuarioV1Controller {
                 .body(usuarioGetService.get(null));
     }
 
-    @Operation(description = "Deleta um usuário que já foi criado (necessita de autorização e ter permissão de ADMIN).")
+    @Operation(description = "Deleta um usuário que já foi criado (necessita de autorização com Token e ter papel de ADMIN).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "203", description = "O usuário foi deleta."),
-            @ApiResponse(responseCode = "400", description = "O usuário não existe.")
+            @ApiResponse(responseCode = "400", description = "O usuário não existe."),
+            @ApiResponse(responseCode = "401", description = "O usuário não está autorizado.")
     })
     @DeleteMapping("/deletar")
     public ResponseEntity<?> delete(@RequestParam Long id) {
@@ -74,10 +75,11 @@ public class UsuarioV1Controller {
                 .body("Usuario deletado com sucesso");
     }
 
-    @Operation(description = "Deleta todos os usuários que já foram criados (necessita de autorização e ter permissão de ADMIN).")
+    @Operation(description = "Deleta todos os usuários que já foram criados (necessita de autorização com Tokene ter papel de ADMIN).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retorna o usuário criado."),
-            @ApiResponse(responseCode = "400", description = "O usuário já existe.")
+            @ApiResponse(responseCode = "400", description = "O usuário já existe."),
+            @ApiResponse(responseCode = "401", description = "O usuário não está autorizado.")
     })
     @DeleteMapping("/deletarAll")
     public ResponseEntity<?> deleteAll() {
