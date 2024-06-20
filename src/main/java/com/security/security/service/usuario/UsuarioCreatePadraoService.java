@@ -5,6 +5,7 @@ import com.security.security.dto.usuario.UsuarioPostRequestDTO;
 import com.security.security.exception.usuario.UsuarioJaExisteException;
 import com.security.security.model.Usuario;
 import com.security.security.repositories.UsuarioRepository;
+import com.security.security.service.mail.MailSenderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,8 @@ public class UsuarioCreatePadraoService implements UsuarioCreateService {
     ModelMapper modelMapper;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    MailSenderService mailSenderService;
 
     @Override
     public UsuarioDTO criar(UsuarioPostRequestDTO usuarioPostRequestDTO) {
@@ -35,6 +38,9 @@ public class UsuarioCreatePadraoService implements UsuarioCreateService {
         usuario = usuarioRepository.save(usuario);
 
         UsuarioDTO usuarioDTO = modelMapper.map(usuario, UsuarioDTO.class);
+
+        String resultMail = mailSenderService.sendMail("levi.pereira.junior@ccc.ufcg.edu.br", "Teste", "Testando");
+        System.out.println(resultMail);
         return usuarioDTO;
     }
 }
