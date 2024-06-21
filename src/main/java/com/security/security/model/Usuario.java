@@ -41,6 +41,9 @@ public class Usuario implements UserDetails {
     @Builder.Default
     Boolean online = false;
 
+    @JsonProperty("email")
+    String email;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role));

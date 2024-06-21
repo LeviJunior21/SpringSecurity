@@ -48,6 +48,7 @@ public class UsuarioV1ControllerTest {
                 .nome("Levi")
                 .senha("123456")
                 .role("ROLE_ADMIN")
+                .email("leviiiiiiiiiiiiiiiiiiii@gmail.com")
                 .build();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
@@ -57,6 +58,7 @@ public class UsuarioV1ControllerTest {
                 .nome("LeviJunior")
                 .senha("123456")
                 .role("ROLE_ADMIN")
+                .email("leviiiiiiiiiiiiiiiiiiii@gmail.com")
                 .build();
 
         authenticationRequestDTO = AuthenticationRequestDTO.builder()

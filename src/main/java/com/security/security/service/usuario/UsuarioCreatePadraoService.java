@@ -39,8 +39,11 @@ public class UsuarioCreatePadraoService implements UsuarioCreateService {
 
         UsuarioDTO usuarioDTO = modelMapper.map(usuario, UsuarioDTO.class);
 
-        String resultMail = mailSenderService.sendMail("levi.pereira.junior@ccc.ufcg.edu.br", "Teste", "Testando");
-        System.out.println(resultMail);
+        Usuario finalUsuario = usuario;
+        Thread thread = new Thread(() ->
+            mailSenderService.sendMail(finalUsuario.getEmail(), "Cadastro no SpringSecurity", "Olá " + finalUsuario.getNome() + ", você está cadastrado")
+        );
+        thread.start();
         return usuarioDTO;
     }
 }
