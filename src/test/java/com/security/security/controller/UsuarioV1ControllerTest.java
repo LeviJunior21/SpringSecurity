@@ -8,11 +8,17 @@ import com.security.security.dto.usuario.UsuarioPostRequestDTO;
 import com.security.security.exception.CustomErrorType;
 import com.security.security.model.Usuario;
 import com.security.security.repositories.UsuarioRepository;
+import com.security.security.service.jwt.JwtService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,11 +42,16 @@ public class UsuarioV1ControllerTest {
     ObjectMapper objectMapper;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    JwtService jwtService;
 
     String URI_USUARIO = "/v1/usuarios";
     Usuario usuario;
     UsuarioPostRequestDTO usuarioPostRequestDTO;
     AuthenticationRequestDTO authenticationRequestDTO;
+    String authorizationHeader;
 
     @BeforeEach
     void setUp() {
@@ -62,9 +73,25 @@ public class UsuarioV1ControllerTest {
                 .build();
 
         authenticationRequestDTO = AuthenticationRequestDTO.builder()
-                .nome("Levi")
+                .nome(usuario.getNome())
                 .senha("123456")
                 .build();
+
+        authorizationHeader = "Bearer " + getToken(authenticationRequestDTO);
+    }
+
+    private String getToken(AuthenticationRequestDTO authenticationRequestDTO) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getNome(), authenticationRequestDTO.getSenha(), usuario.getAuthorities());
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Usuario usuarioAuthenticated = new Usuario();
+        usuarioAuthenticated.setNome(userDetails.getUsername());
+        usuarioAuthenticated.setSenha(userDetails.getPassword());
+        usuarioAuthenticated.setRole("ROLE_ADMIN");
+
+        String token = jwtService.gerarToken(usuarioAuthenticated);
+        return token;
     }
 
     @AfterEach
@@ -165,12 +192,46 @@ public class UsuarioV1ControllerTest {
 
         @Test
         @DisplayName("Quando deletamos todos os usuários sem token")
-        void quandoDeletarTodosOsUsuariosSemToken() throws Exception {
-            String response = driver.perform(post(URI_USUARIO + "/v1/usuarios/deleteAll")
-                    .contentType(MediaType.APPLICATION_JSON))
+        void quandoDeletarTodosOsUsuariosComTokenInvalido() throws Exception {
+            // Arrange
+            usuario.setRole("ROLE_PROGRAMMER");
+            usuarioRepository.save(usuario);
+
+            // Act
+            String response = driver.perform(post(URI_USUARIO + "/deletarAll")
+                            .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
                     .andDo(print())
                     .andExpect(status().isUnauthorized())
                     .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            CustomErrorType customErrorType = objectMapper.readValue(response, CustomErrorType.class);
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("O usuario nao é um administrador", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando deletamos todos os usuários com não habilitado")
+        void quandoDeletarTodosOsUsuariosComNaoHabilitado() throws Exception {
+            // Arrange
+            usuario.setHabilitado(false);
+            usuarioRepository.save(usuario);
+
+            // Act
+            String response = driver.perform(post(URI_USUARIO + "/deletarAll")
+                            .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            CustomErrorType customErrorType = objectMapper.readValue(response, CustomErrorType.class);
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("O usuário está desabilitado", customErrorType.getErrors().get(0));
         }
     }
 }

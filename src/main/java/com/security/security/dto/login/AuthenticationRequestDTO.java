@@ -19,7 +19,7 @@ public class AuthenticationRequestDTO {
     @NotBlank(message = "Nome invalido")
     String nome;
 
-    @Schema(description = "Senha do usuário", defaultValue = "Seu nome", example = "Sua senha")
+    @Schema(description = "Senha do usuário", defaultValue = "Sua senha", example = "Sua senha")
     @JsonProperty("senha")
     @NotBlank(message = "Senha invalida")
     String senha;

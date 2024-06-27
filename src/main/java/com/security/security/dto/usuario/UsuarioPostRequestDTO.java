@@ -26,13 +26,13 @@ public class UsuarioPostRequestDTO {
     @NotBlank(message = "Email invalido")
     String email;
 
-    @Schema(description = "Senha do usuário a ser criado.", defaultValue = "Sua senha", example = "Seu nome")
+    @Schema(description = "Senha do usuário a ser criado.", defaultValue = "Sua senha", example = "Sua senha")
     @JsonProperty("senha")
     @NotBlank(message = "Senha invalida")
     String senha;
 
-    @Schema(description = "Papel do usuário a ser criado.", defaultValue = "Seu papel", example = "Seu nome")
+    @Schema(description = "Papel do usuário a ser criado.", defaultValue = "Seu papel", example = "Seu papel")
     @JsonProperty("role")
-    @NotBlank(message = "Tipo de usuario invalido")
+    @NotBlank(message = "Tipo de papel invalido")
     String role;
 }

@@ -23,4 +23,10 @@ public class CustomErrorType {
         this.message = e.getMessage();
         this.errors = new ArrayList<>();
     }
+
+    public CustomErrorType(List<String> errors) {
+        this.timestamp = LocalDateTime.now();
+        this.message = "Erros de validacao encontrados";
+        this.errors = errors;
+    }
 }
