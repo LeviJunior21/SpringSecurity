@@ -171,7 +171,7 @@ public class UsuarioV1ControllerTest {
 
         @Test
         @DisplayName("Quando criamos um usuário com senha invalida.")
-        void quandoCriamosUmUsuarioComSenhaValido() throws Exception {
+        void quandoCriamosUmUsuarioComSenhaValida() throws Exception {
             // Arrange
             usuarioPostRequestDTO.setSenha(null);
 
@@ -191,8 +191,8 @@ public class UsuarioV1ControllerTest {
         }
 
         @Test
-        @DisplayName("Quando deletamos todos os usuários sem token")
-        void quandoDeletarTodosOsUsuariosComTokenInvalido() throws Exception {
+        @DisplayName("Quando deletamos todos os usuários com Role Invalido")
+        void quandoDeletamosTodosOsUsuariosComRoleInvalido() throws Exception {
             // Arrange
             usuario.setRole("ROLE_PROGRAMMER");
             usuarioRepository.save(usuario);
@@ -213,8 +213,8 @@ public class UsuarioV1ControllerTest {
         }
 
         @Test
-        @DisplayName("Quando deletamos todos os usuários com não habilitado")
-        void quandoDeletarTodosOsUsuariosComNaoHabilitado() throws Exception {
+        @DisplayName("Quando deletamos todos os usuários com usuário não habilitado")
+        void quandoDeletamosTodosOsUsuariosComUsuarioNaoHabilitado() throws Exception {
             // Arrange
             usuario.setHabilitado(false);
             usuarioRepository.save(usuario);

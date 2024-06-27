@@ -20,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,10 +39,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         if (token != null) {
-            String nome = this.jwtService.validarToken(token);
-            Usuario usuario = usuarioRepository.buscarPorNome(nome).orElseThrow(UsuarioNaoExisteException::new);
-
             try {
+                String nome = this.jwtService.validarToken(token);
+                Usuario usuario = usuarioRepository.buscarPorNome(nome).orElseThrow(UsuarioNaoExisteException::new);
+
                 if (!usuario.getHabilitado()) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     throw new UsuarioNaoEstaHabilitadoException();
@@ -52,14 +50,14 @@ public class SecurityFilter extends OncePerRequestFilter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     throw new UsuarioNaoEstaHabilitadoException("O usuario nao é um administrador");
                 }
+
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (AppSecurityException e) {
                 CustomErrorType customErrorType = new CustomErrorType(List.of(e.getMessage()));
                 response.getWriter().write(objectMapper.writeValueAsString(customErrorType));
                 return;
             }
-
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
@@ -67,7 +65,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest httpServletRequest) {
         var authHeader = httpServletRequest.getHeader("Authorization");
-        if(authHeader == null) return null;
+        if (authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
     }
 }
