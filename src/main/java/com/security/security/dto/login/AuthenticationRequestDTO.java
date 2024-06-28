@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenticationRequestDTO {
-    @Schema(description = "Nome do usuário", defaultValue = "Seu nome", example = "Seu nome")
+    @Schema(description = "Nome do usuário", defaultValue = "Seu nome", example = "João")
     @JsonProperty("nome")
     @NotBlank(message = "Nome invalido")
     String nome;
 
-    @Schema(description = "Senha do usuário", defaultValue = "Sua senha", example = "Sua senha")
+    @Schema(description = "Senha do usuário", defaultValue = "Sua senha", example = "99999999")
     @JsonProperty("senha")
     @NotBlank(message = "Senha invalida")
     String senha;

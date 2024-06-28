@@ -15,23 +15,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioPostRequestDTO {
-    @Schema(description = "Nome do usuário a ser criado.", defaultValue = "Seu nome", example = "Seu nome")
+    @Schema(description = "Nome do usuário a ser criado.", defaultValue = "Seu nome", example = "João")
     @JsonProperty("nome")
     @NotBlank(message = "Nome invalido")
     String nome;
 
-    @Schema(description = "Email do usuário a ser criado.", defaultValue = "seuemail@gmail.com", example = "seuemail@gmail.com")
+    @Schema(description = "Email do usuário a ser criado.", defaultValue = "seuemail@gmail.com", example = "joao@gmail.com")
     @Email
     @JsonProperty("email")
     @NotBlank(message = "Email invalido")
     String email;
 
-    @Schema(description = "Senha do usuário a ser criado.", defaultValue = "Sua senha", example = "Sua senha")
+    @Schema(description = "Senha do usuário a ser criado.", defaultValue = "Sua senha", example = "99999999")
     @JsonProperty("senha")
     @NotBlank(message = "Senha invalida")
     String senha;
 
-    @Schema(description = "Papel do usuário a ser criado.", defaultValue = "Seu papel", example = "Seu papel")
+    @Schema(description = "Papel do usuário a ser criado.", defaultValue = "ROLE_USUARIO", example = "ROLE_ADMIN")
     @JsonProperty("role")
     @NotBlank(message = "Tipo de papel invalido")
     String role;

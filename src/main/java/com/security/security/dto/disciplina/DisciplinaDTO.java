@@ -7,13 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "Token do usuário para acessar o sistema.")
+@Schema(description = "Nome da disciplina.")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DisciplinaDTO {
-    @Schema(description = "Token do usuário", defaultValue = "Bearer SeuToken", example = "Bearer SeuToken")
+    @Schema(description = "Nome da disciplina", defaultValue = "Nome da disciplina", example = "Teoria da Computação")
     @NotBlank(message = "Nome da disciplina esta invalido")
     String nome;
 }

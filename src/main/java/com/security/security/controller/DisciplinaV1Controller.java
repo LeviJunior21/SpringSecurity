@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
         value = "/v1/disciplinas",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
-public class DisciplinaController {
+public class DisciplinaV1Controller {
     @Autowired
     DisciplinaCriarService disciplinaCriarService;
     @Autowired

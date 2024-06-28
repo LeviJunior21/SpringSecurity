@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Casos de teste do controlador de disciplinas.")
-public class DisciplinaDTOV1ControllerTest {
+public class DisciplinaV1ControllerTest {
     @Autowired
     MockMvc driver;
     @Autowired
