@@ -17,12 +17,11 @@ public class ChatV1Controller {
     private final Logger LOGGER = LoggerFactory.getLogger(ChatV1Controller.class);
 
     @MessageMapping("/private-message")
-    public ChatPostRequestDTO chat(@Payload ChatPostRequestDTO chatPostPutRequestDTO) {
-        LOGGER.info("Mensagem recebida no controller: " + chatPostPutRequestDTO.getMensagem());
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getReceptor()), "/private", chatPostPutRequestDTO);
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getRemetente()), "/private", chatPostPutRequestDTO);
-        return chatPostPutRequestDTO;
+    public ChatPostRequestDTO chat(@Payload ChatPostRequestDTO chatPostRequestDTO) {
+        LOGGER.info("Mensagem recebida no controller: " + chatPostRequestDTO.getMensagem());
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostRequestDTO.getReceptor()), "/private", chatPostRequestDTO);
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostRequestDTO.getRemetente()), "/private", chatPostRequestDTO);
+        return chatPostRequestDTO;
     }
-
 
 }
