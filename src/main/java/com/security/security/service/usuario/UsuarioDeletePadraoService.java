@@ -10,11 +10,11 @@ public class UsuarioDeletePadraoService implements UsuarioDeleteService {
     UsuarioRepository usuarioRepository;
 
     @Override
-        public void delete(Long idUsuario) {
-            if (idUsuario != null && idUsuario > 0) {
-                usuarioRepository.deleteById(idUsuario);
-            } else if (idUsuario == null){
-                usuarioRepository.deleteAll();
-            }
+    public void delete(Long idUsuario) {
+        if (idUsuario != null && idUsuario > 0) {
+            usuarioRepository.deleteById(idUsuario);
+        } else if (idUsuario == null){
+            usuarioRepository.deleteAll();
         }
+    }
 }

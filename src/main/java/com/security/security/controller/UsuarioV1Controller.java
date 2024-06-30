@@ -63,7 +63,7 @@ public class UsuarioV1Controller {
 
     @Operation(description = "Deleta um usuário que já foi criado (necessita de autorização com Token e ter papel de ADMIN).")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "203", description = "O usuário foi deleta."),
+            @ApiResponse(responseCode = "203", description = "O usuário foi deletado."),
             @ApiResponse(responseCode = "400", description = "O usuário não existe."),
             @ApiResponse(responseCode = "401", description = "O usuário não está autorizado.")
     })
@@ -72,7 +72,7 @@ public class UsuarioV1Controller {
         usuarioDeleteService.delete(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body("Usuario deletado com sucesso");
+                .body("");
     }
 
     @Operation(description = "Deleta todos os usuários que já foram criados (necessita de autorização com Tokene ter papel de ADMIN).")
@@ -86,6 +86,6 @@ public class UsuarioV1Controller {
         usuarioDeleteService.delete(null);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body("Usuarios deletados com sucesso");
+                .body("");
     }
 }

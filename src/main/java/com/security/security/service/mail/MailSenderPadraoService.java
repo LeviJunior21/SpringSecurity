@@ -15,6 +15,7 @@ public class MailSenderPadraoService implements MailSenderService {
     @Value("${spring.mail.username}")
     String remetente;
     Logger LOGGER = LoggerFactory.getLogger(MailSenderPadraoService.class);
+
     public void sendMail(String destinatario, String assunto, String mensagem) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

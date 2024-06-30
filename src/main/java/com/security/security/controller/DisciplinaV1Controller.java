@@ -42,7 +42,7 @@ public class DisciplinaV1Controller {
 
     @Operation(description = "Retorna uma páginação de disciplinas criadas (precisa de autorização com Token).")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna todas as disciplinas criadas."),
+            @ApiResponse(responseCode = "200", description = "Retorna a paginação das disciplinas criadas."),
             @ApiResponse(responseCode = "401", description = "Usuário não está autorizado.")
     })
     @GetMapping
